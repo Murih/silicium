@@ -192,4 +192,49 @@ class SiliciumTest < Minitest::Test
     assert_equal switch_step(2, 3, [10], 0), 10
   end
 
+  def test_determinant_sarryus
+    m = FastMatrix::Matrix.build(3, 3){|i, j| i + j}
+    assert_equal determinant_sarryus(m), 0
+  end
+
+  def test_determinant_sarryus_zero
+    m = FastMatrix::Matrix.build(3, 3){|i, j| i + j}
+    assert_equal determinant_sarryus(m), 0
+  end
+
+  def test_determinant_sarryus_standard_2
+    m = FastMatrix::Matrix.build(4, 4){|i, j| i + j}
+    assert_raises(ArgumentError) do
+      determinant_sarryus(m)
+    end
+  end
+
+  def test_accept_annealing_min_found
+    assert_in_delta 1.0, accept_annealing(2, 2, 100, 0.001), 0.00001
+  end
+
+  def test_accept_annealing_min_not_found
+    assert_in_delta Math.exp(-2), accept_annealing(4, 2, 1000, 0.001), 0.0001
+  end
+
+  def test_simulated_annealing_sqr_polynom_func
+    assert_in_delta 3.0, (simulated_annealing(-5, 5){|x| x * x - 6 * x + 10}), 0.1
+  end
+
+  def test_simulated_annealing_sqr_func
+    assert_in_delta 0.0, (simulated_annealing(-10, 10){|x| x * x}), 0.1
+  end
+
+  def test_simulated_annealing_sin_func
+    assert_in_delta 3 * Math::PI / 2, (simulated_annealing(Math::PI, Math::PI * 2){|x| Math.sin x}), 0.1
+  end
+
+  def test_annealing_step
+    assert_equal 10, annealing_step(100, -10, 10)
+  end
+
+  def test_annealing_cond
+    assert(annealing_cond(2, 4, 100, 1))
+  end
+
 end
